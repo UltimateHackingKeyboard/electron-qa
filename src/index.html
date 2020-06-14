@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>Electron QA Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    div.footer {
+      position: absolute;
+      bottom: 0;
+    }
+
+    .status.info {
+      color: blue;
+      }
+
+    .status.error {
+      color: red;
+    }
+
+    .status.success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+<h1>Electron QA Project</h1>
+<h3>Auto update</h3>
+<form id="autoUpdateForm">
+  <div>
+    <label>
+      <input type="checkbox" name="checkForUpdateAtStartup"/> Check for update at startup
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" name="preReleaseAllowed"/> Pre release allowed
+    </label>
+  </div>
+  <div>
+    <button type="submit">Save Settings</button>
+    <button id="checkForUpdateBtn" type="button">Check for update</button>
+  </div>
+</form>
+<div id="status" class="status">
+
+</div>
+
+<div class="footer">
+  Version: <span id="versionPlaceHolder"></span>
+</div>
+
+<script>
+  const autoUpdateForm = document.getElementById('autoUpdateForm')
+  const statusDiv = document.getElementById('status'
+  )
+  ipcRenderer.on('app-settings', function processAppSettings(event, settings) {
+    document.getElementById('versionPlaceHolder').innerText = settings.version
+    setAutoUpdateForm(settings.autoUpdate)
+  })
+
+  ipcRenderer.on('auto-update-status', function processAutoUpdateStatus(event, status) {
+    statusDiv.innerText = status.message
+    statusDiv.classList.remove('info', 'error', 'success')
+    statusDiv.classList.add(status.type)
+  })
+
+  autoUpdateForm.addEventListener('submit', function submitAutoUpdateForm(event) {
+    event.preventDefault()
+
+    const settings = getAutoUpdateSettingsFromForm()
+    ipcRenderer.send('save-settings', settings)
+  })
+
+  document
+    .getElementById('checkForUpdateBtn')
+    .addEventListener('click', function checkForUpdate(event) {
+      event.preventDefault()
+
+      const settings = getAutoUpdateSettingsFromForm()
+      ipcRenderer.send('check-for-update', settings.preReleaseAllowed)
+    })
+
+  function getAutoUpdateSettingsFromForm() {
+    const settings = {
+      checkForUpdateAtStartup: false,
+      preReleaseAllowed: false,
+    }
+    const formData = new FormData(autoUpdateForm)
+    for (const key of formData.keys()) {
+      settings[key] = formData.get(key) === 'on'
+    }
+
+    return settings
+  }
+
+  function setAutoUpdateForm(settings) {
+    autoUpdateForm.querySelector('input[name="checkForUpdateAtStartup"]').checked = settings.checkForUpdateAtStartup
+    autoUpdateForm.querySelector('input[name="preReleaseAllowed"]').checked = settings.preReleaseAllowed
+  }
+</script>
+</body>
+</html>
