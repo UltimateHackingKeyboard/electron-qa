@@ -36,7 +36,7 @@ const Platform = builder.Platform
 const ELECTRON_BUILD_FOLDER = path.join(__dirname, '../tmp-build')
 
 let target = ''
-let artifactName = 'UHK.Agent-${version}-${os}'
+let artifactName = 'Electron-QA-${version}-${os}'
 
 if (process.platform === 'darwin') {
   target = Platform.MAC.createTarget()
@@ -74,7 +74,7 @@ if (TEST_BUILD || gitTag) {
         app: ELECTRON_BUILD_FOLDER
       },
       appId: 'com.ultimategadgetlabs.electron-qa',
-      productName: 'UHK Agent',
+      productName: 'Electron QA',
       mac: {
         category: 'public.app-category.utilities',
         identity: 'CMXCBCFHDG',
@@ -112,8 +112,8 @@ async function afterPack(context) {
   if (process.platform !== 'linux')
     return
 
-  const sourceExecutable = path.join(context.appOutDir, 'uhk-agent')
-  const targetExecutable = path.join(context.appOutDir, 'uhk-agent-ui')
+  const sourceExecutable = path.join(context.appOutDir, 'electron-qa')
+  const targetExecutable = path.join(context.appOutDir, 'electron-qa-ui')
   const launcherScript = path.join(__dirname, 'launcher-script.sh')
   const chromeSandbox = path.join(context.appOutDir, 'chrome-sandbox')
 
