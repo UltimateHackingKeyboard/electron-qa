@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const isDev = require('electron-is-dev')
+const logger = require('electron-log');
 const { autoUpdater } = require('electron-updater')
 const electronSettings = require('electron-settings')
 const path = require('path')
@@ -13,7 +14,7 @@ app
   .whenReady()
   .then(createWindow)
   .then(sendAppSettings)
-  .catch(console.error)
+  .catch(logger.error)
 
 function createWindow() {
   win = new BrowserWindow({
@@ -46,6 +47,7 @@ ipcMain.on('check-for-update', function saveSettings(event, preReleaseAllowed) {
     })
 
   autoUpdater.allowPrerelease = preReleaseAllowed
+  autoUpdater.autoDownload = false
   autoUpdater.checkForUpdatesAndNotify()
 })
 
@@ -53,34 +55,50 @@ ipcMain.on('save-settings', function saveSettings(event, settings) {
   electronSettings.set('autoUpdate', settings)
 })
 
+ipcMain.on('download-update', () => {
+  autoUpdater.downloadUpdate();
+})
+
+ipcMain.on('quit-update', () => {
+  autoUpdater.quitAndInstall(true)
+})
+
 autoUpdater.on('checking-for-update', () => {
   win.webContents.send('auto-update-status', { message: 'Checking for update', type: 'info' })
 })
 
 autoUpdater.on('update-available', (event, info) => {
-  console.log('update-available', info)
-  win.webContents.send('auto-update-status', { message: `Update available. New version ${info.version}`, type: 'info' })
+  logger.log('update-available', info)
+
+  const version = info && info.version || 'unknown'
+
+  win.webContents.send('auto-update-status', {
+    event: 'update-available',
+    message: `Update available. New version ${version}`,
+    type: 'info'
+  })
 })
 
 autoUpdater.on('update-not-available', (event, info) => {
-  console.log('update-not-available', info)
+  logger.log('update-not-available', info)
   win.webContents.send('auto-update-status', { message: 'Update not available', type: 'info' })
 })
 
 autoUpdater.on('error', (event, error) => {
-  console.error(error)
+  logger.error(error)
   win.webContents.send('auto-update-status', { message: `Error on update: ${error.message}`, type: 'error' })
 })
 
 autoUpdater.on('download-progress', (progress) => {
-  console.log('update-download-progress', progress)
+  logger.log('update-download-progress', progress)
   win.webContents.send('auto-update-status', { message: `Downloading update ${progress.percent}`, type: 'info' })
 })
 
 autoUpdater.on('update-downloaded', (event, info) => {
+  const version = info && info.version || 'unknows'
   win.webContents.send('auto-update-status', {
     event: 'update-downloaded',
-    message: `${info.version} version downloaded`,
+    message: `${version} version downloaded`,
     type: 'info'
   })
 })

@@ -22,6 +22,10 @@
     .status.success {
       color: green;
     }
+
+    .d-none {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -41,8 +45,11 @@
   <div>
     <button type="submit">Save Settings</button>
     <button id="checkForUpdateBtn" type="button">Check for update</button>
+    <button id="downloadUpdateBtn" class="d-none" type="button">Download update</button>
+    <button id="quitAndUpdateBtn" class="d-none" type="button">Quit and update</button>
   </div>
 </form>
+
 <div id="status" class="status">
 
 </div>
@@ -53,8 +60,11 @@
 
 <script>
   const autoUpdateForm = document.getElementById('autoUpdateForm')
-  const statusDiv = document.getElementById('status'
-  )
+  const statusDiv = document.getElementById('status')
+  const checkForUpdateBtn = document.getElementById('checkForUpdateBtn')
+  const downloadUpdateBtn = document.getElementById('downloadUpdateBtn')
+  const quitAndUpdateBtn = document.getElementById('quitAndUpdateBtn')
+
   ipcRenderer.on('app-settings', function processAppSettings(event, settings) {
     document.getElementById('versionPlaceHolder').innerText = settings.version
     setAutoUpdateForm(settings.autoUpdate)
@@ -64,6 +74,18 @@
     statusDiv.innerText = status.message
     statusDiv.classList.remove('info', 'error', 'success')
     statusDiv.classList.add(status.type)
+
+    switch (status.event) {
+      case 'update-available':
+        checkForUpdateBtn.classList.add('d-none')
+        downloadUpdateBtn.classList.remove('d-none')
+        break;
+
+      case 'update-downloaded':
+        downloadUpdateBtn.classList.add('d-none')
+        quitAndUpdateBtn.classList.remove('d-none')
+        break;
+    }
   })
 
   autoUpdateForm.addEventListener('submit', function submitAutoUpdateForm(event) {
@@ -73,14 +95,22 @@
     ipcRenderer.send('save-settings', settings)
   })
 
-  document
-    .getElementById('checkForUpdateBtn')
-    .addEventListener('click', function checkForUpdate(event) {
+  downloadUpdateBtn.addEventListener('click', function downloadUpdate(){
+    ipcRenderer.send('download-update')
+    downloadUpdateBtn.disabled = true
+  })
+
+  quitAndUpdateBtn.addEventListener('click', function quitAndUpdate(){
+    ipcRenderer.send('quit-update')
+  })
+
+  checkForUpdateBtn.addEventListener('click', function checkForUpdate(event) {
       event.preventDefault()
 
       const settings = getAutoUpdateSettingsFromForm()
       ipcRenderer.send('check-for-update', settings.preReleaseAllowed)
     })
+
 
   function getAutoUpdateSettingsFromForm() {
     const settings = {

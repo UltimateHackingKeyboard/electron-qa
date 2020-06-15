@@ -2,7 +2,6 @@
 const exec = require('child_process').execSync
 
 const TEST_BUILD = process.env.TEST_BUILD // set true if you would like to test on your local machine
-const DIR = process.env.DIR
 
 // electron-builder security override.
 // Need if wanna create test release build from PR
@@ -65,7 +64,6 @@ if (TEST_BUILD || gitTag) {
   prepareDistDir()
 
   builder.build({
-    dir: DIR,
     targets: target,
     config: {
       afterPack,
@@ -117,10 +115,7 @@ async function afterPack(context) {
   const launcherScript = path.join(__dirname, 'launcher-script.sh')
   const chromeSandbox = path.join(context.appOutDir, 'chrome-sandbox')
 
-  // rename uhk-agent to the-uhk-agent
   await fs.rename(sourceExecutable, targetExecutable)
-
-  // copy launcher script to uhk-agent
   await fs.copy(launcherScript, sourceExecutable)
   await fs.chmod(sourceExecutable, 0o755)
 
@@ -137,7 +132,7 @@ async function afterSign(context) {
   const appName = context.packager.appInfo.productFilename
 
   return await notarize({
-    appBundleId: 'com.ultimategadgetlabs.agent',
+    appBundleId: 'com.ultimategadgetlabs.electron-qa',
     appPath: `${appOutDir}/${appName}.app`,
     appleId: process.env.APPLE_ID,
     appleIdPassword: process.env.APPLE_ID_PASS,
@@ -158,5 +153,6 @@ function prepareDistDir() {
   const rootJson = fs.readJsonSync(path.join(__dirname, '../package.json'))
   const electronJson = fs.readJsonSync(path.join(__dirname, '../src/package.json'))
   electronJson.version = rootJson.version
+  electronJson.dependencies = rootJson.dependencies
   fs.writeJsonSync(path.join(ELECTRON_BUILD_FOLDER, 'package.json'), electronJson, { spaces: 2 })
 }
