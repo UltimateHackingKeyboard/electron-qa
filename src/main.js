@@ -5,6 +5,7 @@ const { autoUpdater } = require('electron-updater')
 const electronSettings = require('electron-settings')
 const path = require('path')
 
+autoUpdater.logger = logger
 // The electron window
 let win
 
