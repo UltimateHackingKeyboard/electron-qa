@@ -61,7 +61,7 @@ ipcMain.on('download-update', () => {
 })
 
 ipcMain.on('quit-update', () => {
-  autoUpdater.quitAndInstall(true)
+  autoUpdater.quitAndInstall(true, true)
 })
 
 autoUpdater.on('checking-for-update', () => {
