@@ -20,6 +20,8 @@ app
 function createWindow() {
   win = new BrowserWindow({
     webPreferences: {
+      contextIsolation: false,
+      spellcheck: false,
       preload: path.join(__dirname, 'preload.js')
     }
   })

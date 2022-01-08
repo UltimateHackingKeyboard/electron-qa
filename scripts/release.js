@@ -38,7 +38,7 @@ let target = ''
 let artifactName = 'Electron-QA-${version}-${os}'
 
 if (process.platform === 'darwin') {
-  target = Platform.MAC.createTarget()
+  target = Platform.MAC.createTarget('dmg', builder.Arch.universal)
   artifactName += '.${ext}'
 } else if (process.platform === 'win32') {
   target = Platform.WINDOWS.createTarget('nsis', builder.Arch.ia32, builder.Arch.x64)
@@ -51,7 +51,7 @@ if (process.platform === 'darwin') {
   process.exit(1)
 }
 
-if (process.platform === 'darwin' && process.env.CI) {
+if (process.platform === 'darwin') {
   const encryptedFile = path.join(__dirname, './certs/mac-cert.p12.enc')
   const decryptedFile = path.join(__dirname, './certs/mac-cert.p12')
   exec(`openssl aes-256-cbc -K $CERT_KEY -iv $CERT_IV -in ${encryptedFile} -out ${decryptedFile} -d`)
