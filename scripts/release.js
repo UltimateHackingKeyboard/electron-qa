@@ -38,7 +38,7 @@ let target = ''
 let artifactName = 'Electron-QA-${version}-${os}'
 
 if (process.platform === 'darwin') {
-  target = Platform.MAC.createTarget('dmg', builder.Arch.universal)
+  target = Platform.MAC.createTarget('default', builder.Arch.universal)
   artifactName += '.${ext}'
 } else if (process.platform === 'win32') {
   target = Platform.WINDOWS.createTarget('nsis', builder.Arch.ia32, builder.Arch.x64)
