@@ -66,7 +66,6 @@ if (TEST_BUILD || gitTag) {
   builder.build({
     targets: target,
     config: {
-      afterPack,
       afterSign,
       directories: {
         app: ELECTRON_BUILD_FOLDER
@@ -104,23 +103,6 @@ if (TEST_BUILD || gitTag) {
 } else {
   console.log('No git tag')
   process.exit(1)
-}
-
-async function afterPack(context) {
-  if (process.platform !== 'linux')
-    return
-
-  const sourceExecutable = path.join(context.appOutDir, 'electron-qa')
-  const targetExecutable = path.join(context.appOutDir, 'electron-qa-ui')
-  const launcherScript = path.join(__dirname, 'launcher-script.sh')
-  const chromeSandbox = path.join(context.appOutDir, 'chrome-sandbox')
-
-  await fs.rename(sourceExecutable, targetExecutable)
-  await fs.copy(launcherScript, sourceExecutable)
-  await fs.chmod(sourceExecutable, 0o755)
-
-  // remove the chrome-sandbox file since we explicitly disable it
-  await fs.unlink(chromeSandbox)
 }
 
 async function afterSign(context) {
