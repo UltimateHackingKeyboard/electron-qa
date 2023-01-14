@@ -20,15 +20,15 @@
     "url": "git@github.com:UltimateHackingKeyboard/electron-qa.git"
   },
   "dependencies": {
-    "electron-updater": "5.2.1",
+    "electron-updater": "5.3.0",
     "electron-is-dev": "1.2.0",
-    "electron-log": "4.4.1",
-    "electron-settings": "3.1.4"
+    "electron-log": "4.4.8",
+    "electron-settings": "4.0.2"
   },
   "devDependencies": {
-    "electron": "20.3.0",
-    "electron-builder": "23.3.3",
-    "electron-notarize": "1.2.1",
+    "@electron/notarize": "1.2.3",
+    "electron": "22.0.2",
+    "electron-builder": "23.6.0",
     "fs-extra": "10.0.0"
   }
 }
