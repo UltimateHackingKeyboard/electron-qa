@@ -30,9 +30,9 @@ function createWindow() {
     .loadFile(path.join(__dirname, 'index.html'))
 }
 
-function sendAppSettings() {
+async function sendAppSettings() {
   const settings = {
-    autoUpdate: electronSettings.get('autoUpdate') || {
+    autoUpdate: await electronSettings.get('autoUpdate') || {
       checkForUpdateAtStartup: false,
       preReleaseAllowed: false,
     },

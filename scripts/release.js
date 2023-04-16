@@ -29,7 +29,6 @@ if (!isReleaseCommit) {
 const path = require('path')
 const builder = require('electron-builder')
 const fs = require('fs-extra')
-const { notarize } = require('@electron/notarize')
 
 const Platform = builder.Platform
 const ELECTRON_BUILD_FOLDER = path.join(__dirname, '../tmp-build')
@@ -66,7 +65,6 @@ if (TEST_BUILD || gitTag) {
   builder.build({
     targets: target,
     config: {
-      afterSign,
       directories: {
         app: ELECTRON_BUILD_FOLDER
       },
@@ -103,22 +101,6 @@ if (TEST_BUILD || gitTag) {
 } else {
   console.log('No git tag')
   process.exit(1)
-}
-
-async function afterSign(context) {
-  const { electronPlatformName, appOutDir } = context
-  if (electronPlatformName !== 'darwin') {
-    return
-  }
-
-  const appName = context.packager.appInfo.productFilename
-
-  return await notarize({
-    appBundleId: 'com.ultimategadgetlabs.electron-qa',
-    appPath: `${appOutDir}/${appName}.app`,
-    appleId: process.env.APPLE_ID,
-    appleIdPassword: process.env.APPLE_ID_PASS,
-  })
 }
 
 function getGithubTag() {
