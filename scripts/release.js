@@ -59,6 +59,8 @@ if (process.platform === 'darwin') {
   exec('openssl aes-256-cbc -K %CERT_KEY% -iv %CERT_IV% -in scripts/certs/windows-cert.p12.enc -out scripts/certs/windows-cert.p12 -d')
 }
 
+const APPLE_TEAM_ID = 'CMXCBCFHDG'
+
 if (TEST_BUILD || gitTag) {
   prepareDistDir()
 
@@ -72,12 +74,15 @@ if (TEST_BUILD || gitTag) {
       productName: 'Electron QA',
       mac: {
         category: 'public.app-category.utilities',
-        identity: 'CMXCBCFHDG',
+        identity: APPLE_TEAM_ID,
         cscLink: path.join(__dirname, 'certs/mac-cert.p12'),
         hardenedRuntime: true,
         gatekeeperAssess: false,
         entitlements: path.join(__dirname, 'entitlements.mac.plist'),
-        entitlementsInherit: path.join(__dirname, 'entitlements.mac.plist')
+        entitlementsInherit: path.join(__dirname, 'entitlements.mac.plist'),
+        notarize: {
+          teamId: APPLE_TEAM_ID,
+        },
       },
       win: {
         publisherName: 'Ultimate Gadget Laboratories Kft.',
