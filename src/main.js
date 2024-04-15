@@ -70,10 +70,10 @@ autoUpdater.on('checking-for-update', () => {
   win.webContents.send('auto-update-status', { message: 'Checking for update', type: 'info' })
 })
 
-autoUpdater.on('update-available', (event, info) => {
-  logger.log('update-available', info)
+autoUpdater.on('update-available', (event) => {
+  logger.log('update-available', event)
 
-  const version = info && info.version || 'unknown'
+  const version =event?.version || 'unknown'
 
   win.webContents.send('auto-update-status', {
     event: 'update-available',
@@ -97,8 +97,8 @@ autoUpdater.on('download-progress', (progress) => {
   win.webContents.send('auto-update-status', { message: `Downloading update ${progress.percent}`, type: 'info' })
 })
 
-autoUpdater.on('update-downloaded', (event, info) => {
-  const version = info && info.version || 'unknows'
+autoUpdater.on('update-downloaded', (event) => {
+  const version = event.version || 'unknown'
   win.webContents.send('auto-update-status', {
     event: 'update-downloaded',
     message: `${version} version downloaded`,
