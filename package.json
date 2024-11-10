@@ -1,7 +1,7 @@
 {
   "name": "electron-qa",
   "private": true,
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "Electron updater E2E test",
   "scripts": {
     "start": "electron ./src/main.js",
