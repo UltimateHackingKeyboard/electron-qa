@@ -60,6 +60,7 @@ if (process.platform === 'darwin') {
 }
 
 const APPLE_TEAM_ID = 'CMXCBCFHDG'
+process.env.APPLE_TEAM_ID = APPLE_TEAM_ID
 
 if (TEST_BUILD || gitTag) {
   prepareDistDir()
@@ -80,9 +81,6 @@ if (TEST_BUILD || gitTag) {
         gatekeeperAssess: false,
         entitlements: path.join(__dirname, 'entitlements.mac.plist'),
         entitlementsInherit: path.join(__dirname, 'entitlements.mac.plist'),
-        notarize: {
-          teamId: APPLE_TEAM_ID,
-        },
       },
       win: {
         publisherName: 'Ultimate Gadget Laboratories Kft.',
