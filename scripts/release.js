@@ -83,8 +83,10 @@ if (TEST_BUILD || gitTag) {
         entitlementsInherit: path.join(__dirname, 'entitlements.mac.plist'),
       },
       win: {
-        publisherName: 'Ultimate Gadget Laboratories Kft.',
-        certificateFile: path.join(__dirname, 'certs/windows-cert.p12')
+        signtoolOptions: {
+          publisherName: 'Ultimate Gadget Laboratories Kft.',
+          certificateFile: path.join(__dirname, 'certs/windows-cert.p12')
+        }
       },
       linux: {},
       publish: 'github',
