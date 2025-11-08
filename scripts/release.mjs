@@ -84,10 +84,10 @@ if (TEST_BUILD || gitTag) {
         entitlementsInherit: path.join(__dirname, 'entitlements.mac.plist'),
       },
       win: {
-         signtoolOptions: {
-           publisherName: 'Ultimate Gadget Laboratories Kft.',
-           sign: configuration => azureKeyvaultSign(configuration.path),
-        }
+        signtoolOptions: {
+          publisherName: 'Ultimate Gadget Laboratories Kft.',
+          sign: configuration => azureKeyvaultSign(configuration.path),
+        },
       },
       linux: {},
       publish: 'github',
@@ -128,7 +128,7 @@ function prepareDistDir() {
 }
 
 // sign only 1 file in every 2 sec
-// otherwise we got random siging error
+// otherwise we got random singing error
 // maybe related issue https://github.com/vcsjones/AzureSignTool/issues/330
 const throttleAzureCodeSign = pThrottle({
 	limit: 1,
