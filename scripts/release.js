@@ -54,9 +54,6 @@ if (process.platform === 'darwin') {
   const encryptedFile = path.join(__dirname, './certs/mac-cert.p12.enc')
   const decryptedFile = path.join(__dirname, './certs/mac-cert.p12')
   exec(`openssl aes-256-cbc -K $CERT_KEY -iv $CERT_IV -in ${encryptedFile} -out ${decryptedFile} -d`)
-} else if (process.platform === 'win32') {
-  // decrypt windows certificate
-  exec('openssl aes-256-cbc -K %CERT_KEY% -iv %CERT_IV% -in scripts/certs/windows-cert.p12.enc -out scripts/certs/windows-cert.p12 -d')
 }
 
 const APPLE_TEAM_ID = 'CMXCBCFHDG'
@@ -85,7 +82,6 @@ if (TEST_BUILD || gitTag) {
       win: {
         signtoolOptions: {
           publisherName: 'Ultimate Gadget Laboratories Kft.',
-          certificateFile: path.join(__dirname, 'certs/windows-cert.p12')
         }
       },
       linux: {},
