@@ -85,7 +85,7 @@ if (TEST_BUILD || gitTag) {
       },
       win: {
         signtoolOptions: {
-          publisherName: 'Ultimate Gadget Laboratories Kft.',
+          publisherName: 'ULTIMATE GADGET LABORATORIES KFT.',
           sign: configuration => azureKeyvaultSign(configuration.path),
         },
       },
