@@ -94,7 +94,11 @@ if (TEST_BUILD || gitTag) {
       artifactName,
       files: [
         '**/*'
-      ]
+      ],
+      toolsets: {
+        // Use statically linked AppImage to prevent the installation of libfuse2 on newer linux distros
+        appimage: '1.0.2',
+      }
     },
   })
     .then(() => {
