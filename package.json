@@ -29,7 +29,7 @@
     "electron": "40.4.1",
     "electron-builder": "26.8.0",
     "fs-extra": "11.3.3",
-    "p-retry": "7.1.0",
+    "p-retry": "7.1.1",
     "p-throttle": "8.1.0"
   }
 }
