@@ -21,15 +21,15 @@
   },
   "dependencies": {
     "electron-updater": "6.8.3",
-    "electron-is-dev": "2.0.0",
-    "electron-log": "4.4.8",
-    "electron-settings": "4.0.3"
+    "electron-is-dev": "3.0.1",
+    "electron-log": "5.4.3",
+    "electron-settings": "4.0.4"
   },
   "devDependencies": {
-    "electron": "40.4.1",
-    "electron-builder": "26.8.0",
-    "fs-extra": "11.3.3",
-    "p-retry": "7.1.1",
+    "electron": "41.5.0",
+    "electron-builder": "26.8.1",
+    "fs-extra": "11.3.4",
+    "p-retry": "8.0.0",
     "p-throttle": "8.1.0"
   }
 }
