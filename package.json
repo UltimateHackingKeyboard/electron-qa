@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "electron-updater": "6.8.3",
-    "electron-is-dev": "3.0.1",
+    "electron-is-dev": "2.0.0",
     "electron-log": "5.4.3",
     "electron-settings": "4.0.4"
   },
