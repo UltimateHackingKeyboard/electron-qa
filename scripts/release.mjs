@@ -30,7 +30,7 @@ if (!isReleaseCommit) {
 import path from 'node:path'
 import {setTimeout} from 'node:timers/promises'
 import builder from 'electron-builder'
-import fs from 'fs-extra'
+import fs from 'fs'
 import pThrottle from 'p-throttle'
 import pRetry from 'p-retry'
 
@@ -97,7 +97,7 @@ if (TEST_BUILD || gitTag) {
       ],
       toolsets: {
         // Use statically linked AppImage to prevent the installation of libfuse2 on newer linux distros
-        appimage: '1.0.2',
+        appimage: '1.0.3',
       }
     },
   })
@@ -121,14 +121,17 @@ function getGithubTag() {
 }
 
 function prepareDistDir() {
-  fs.ensureDirSync(ELECTRON_BUILD_FOLDER)
-  fs.copySync(path.join(__dirname, '../src'), ELECTRON_BUILD_FOLDER)
+  fs.mkdirSync(ELECTRON_BUILD_FOLDER, { recursive: true })
+  fs.cpSync(path.join(__dirname, '../src'), ELECTRON_BUILD_FOLDER, { recursive: true, force: true })
 
-  const rootJson = fs.readJsonSync(path.join(__dirname, '../package.json'))
-  const electronJson = fs.readJsonSync(path.join(__dirname, '../src/package.json'))
+  const rootJsonContent = fs.readFileSync(path.join(__dirname, '../package.json'), { encoding: 'utf-8' })
+  const rootJson = JSON.parse(rootJsonContent)
+  const electronJsonContent = fs.readFileSync(path.join(__dirname, '../src/package.json'), { encoding: 'utf-8' })
+  const electronJson = JSON.parse(electronJsonContent)
   electronJson.version = rootJson.version
   electronJson.dependencies = rootJson.dependencies
-  fs.writeJsonSync(path.join(ELECTRON_BUILD_FOLDER, 'package.json'), electronJson, { spaces: 2 })
+  const resultFileContent = JSON.stringify(electronJson, null, 2)
+  fs.writeFileSync(path.join(ELECTRON_BUILD_FOLDER, 'package.json'), resultFileContent, { encoding: 'utf-8' })
 }
 
 // sign only 1 file in every 2 sec
